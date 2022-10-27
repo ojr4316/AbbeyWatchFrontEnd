@@ -41,7 +41,7 @@ export default class Home extends Component<Props, State> {
     // Get Past Successful Images
     // TODO: GET /past for populating past occurances array
     let tempPast: AbbeyImage[] = [];
-    for (let i = 9; i > 0; i--) {
+    for (let i = 19; i > 0; i--) {
       tempPast.push({
         date: new Date(`2022-10-1${i}`),
         image: defaultRoad.src,
@@ -75,7 +75,7 @@ export default class Home extends Component<Props, State> {
   render() {
     const { recent, past } = this.state;
     return (
-      <div>
+      <div className={styles.full_page}>
         <Head>
           <title>AbbeyWatch</title>
           <meta
