@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { Component } from "react";
 import styles from "../styles/Home.module.css";
 import road from "../public/road.svg";
@@ -9,14 +7,8 @@ import eye from "../public/eye.svg";
 import defaultRoad from "../public/default.jpg";
 import { ImageCard } from "../Components/ImageCard";
 import moment from "moment";
-
-type AbbeyImage = {
-  image: string;
-  date: Date;
-  success: boolean;
-  numberOfPeople?: number;
-  confidence?: number;
-};
+import { AbbeyImage } from "../types/AbbeyImage";
+import axios from "axios";
 
 type Props = {};
 
@@ -39,17 +31,19 @@ export default class Home extends Component<Props, State> {
 
   componentDidMount(): void {
     // Get Past Successful Images
-    // TODO: GET /past for populating past occurances array
-    let tempPast: AbbeyImage[] = [];
-    for (let i = 19; i > 0; i--) {
-      tempPast.push({
-        date: new Date(`2022-10-1${i}`),
-        image: defaultRoad.src,
-        success: i % 2 == 0,
-        confidence: i * 11,
-      });
-    }
-    this.setState({ past: tempPast });
+
+    axios.get("/api/past").then((res) => {
+      console.log(res.data.result);
+      if (!res.data.error) {
+        this.setState({
+          past: res.data.result,
+        });
+      } else {
+        this.setState({
+          past: [],
+        });
+      }
+    });
 
     // Get the most recently processed image
     this.updateMostRecent();
@@ -66,9 +60,16 @@ export default class Home extends Component<Props, State> {
 
   // Run every ~5 seconds to update the image that is currently being processed
   updateMostRecent = () => {
-    // TODO: GET /recent for populating most recent entry
-    this.setState({
-      recent: { image: defaultRoad.src, date: new Date(), success: true },
+    axios.get("/api/recent").then((res) => {
+      if (!res.data.error) {
+        this.setState({
+          recent: res.data.result,
+        });
+      } else {
+        this.setState({
+          recent: { image: defaultRoad.src, date: new Date(), success: true, confidence: 0 },
+        });
+      }
     });
   };
 
@@ -119,9 +120,9 @@ export default class Home extends Component<Props, State> {
           <div className={styles.right_pane}>
             {past.map((p) => (
               <ImageCard
-                key={p.date.toString()}
-                image={defaultRoad.src}
-                confidence={p.confidence!}
+                key={`${p.image}${p.date}`}
+                image={p.image}
+                confidence={p.confidence}
                 date={p.date}
               />
             ))}

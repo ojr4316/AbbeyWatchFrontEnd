@@ -9,6 +9,7 @@ type Props = {
 };
 
 export function ImageCard(props: Props) {
+  console.log(props.image);
   return (
     <div className={styles.container}>
       <img src={props.image} alt="ImageCard" className={styles.image} />
