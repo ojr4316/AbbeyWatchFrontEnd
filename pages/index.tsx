@@ -49,7 +49,7 @@ export default class Home extends Component<Props, State> {
     this.updateMostRecent();
 
     // Continue to update the last processed image
-    this.updateIntervalId = setInterval(this.updateMostRecent, 5 * 1000);
+    this.updateIntervalId = setInterval(this.updateMostRecent, 2 * 1000);
   }
 
   componentWillUnmount(): void {
