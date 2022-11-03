@@ -39,7 +39,7 @@ export default async function handler(
         signatureVersion: "v4",
         region: "us-east-1",
         secretAccessKey: process.env.AWS_ACCESS_SECRET,
-        sessionToken: process.env.AWS_SESSION_TOKEN
+        sessionToken: process.env.AWS_SESSION
       });
 
       const url = s3.getSignedUrl("getObject", {
